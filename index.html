@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Main</title>
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="styles/printStyles.css" media="print">
+</head>
+<body id="main" style="background-color:darkgray">
+<header>
+    <figure class="imagewrapper">
+        <img class="img" id="mainpagehead" src="pictures/Untitled-1.png" alt="SMODSNGLOGO"/>
+    </figure>
+</header>
+
+
+<nav class="navbar" id="responsiveNav">
+    <a id="onpage" href="index.html" title="DOMOV">Home</a>
+    <a href="Article1.html" title="V roku 2015 mi bola zaslaná...">Enviro Projekt</a>
+    <a href="Atricle1Strapped.html" title="Môj blog">
+        <span class="full">Môj Blog</span>
+        <span class="cut">Blog</span>
+    </a>
+    <a href="Article3.html" title="V tomto článku nájdete zopár ostatných dizajnov...">
+        <span class="full">Ostatná Tvorba</span>
+        <span class="cut">Iné</span></a>
+    <a href="javascript:void(0);" class="icon" onclick="responisity()"><i class="fa fa-bars"></i> </a>
+</nav>
+
+<main class="center">
+    <article>
+        <h1>Moje blog-fólio</h1>
+        <p>Moja stránka má za cieľ informovať toho, kto ju číta o mojom pôsobení v oblasti počítačovej grafiky nielen
+            formou
+            galérie ale aj formou mojich zážitkov s designom. Poviem vám kúsok o tom kde čerpám informáciu, o
+            zaujímavých
+            klientoch (ktorí sa za pár rokov vždy nazbierajú v akomkoľvek poli pôsobiska) a o tom ako zlepšiť svoju
+            organizáciu
+            času a profesionálnych záležitostí aby ste zbytočne neprichádzali o peniaze a o Vašu vášeň pre tvorbu umenia
+            v
+            akejkoľvek podobe.</p>
+        <h2 style="text-align: center">Teraz niečo o mne</h2>
+        <img id="ME" src="pictures/ME.jpg" alt="Author"
+             style="display: block; margin-left: auto; margin-right: auto; border-radius: 50%; width: 20vh;">
+        <ul>
+            <li><b>Martin Thomas Ondruška</b></li>
+            <li>Technická univerzita v Košiciach</li>
+            <li><b>FEI</b></li>
+            <li>Informatika</li>
+            <li>martin.thomas.ondruska@gmail.com</li>
+        </ul>
+    </article>
+    <section id="form">
+        <form id="formicka">
+            <h2>Formulár:</h2>
+            <p id="opinion_form">
+            <p>
+                <label for="name">Meno</label>
+                <br>
+                <input class="forminput" id="name" name="name" required size="10" type="text">
+            </p>
+
+            <p>
+                <label for="email">E-Mail</label>
+                <br>
+                <input type="email" name="email"  class="forminput" id="email" required size="30">
+            </p>
+
+            <p>
+                <label for="url">Obrázok</label>
+                <br>
+                <input class="forminput" id="url" name="url" pattern="https://.*" size="30" type="url">
+            </p>
+
+            <p>Typ správy</p>
+
+            <div>
+                <input checked id="zlepsenie" name="radio" type="radio" value="zlepsenie">
+                <label for="zlepsenie">Zlepšenie webu</label>
+            </div>
+
+            <div>
+                <input id="nazor" name="radio" type="radio" value="nazor">
+                <label for="nazor">Názor na článok</label>
+            </div>
+
+            <p><label for="info">Správa</label></p>
+            <p><textarea class="forminput" id="info" name="info" style="resize: none; height: 8vh" required></textarea>
+            </p>
+
+            <p><label for="supp" id="support">Support</label></p>
+            <select id="supp" style="margin-left: 2vh">
+                <option value="">Prosím vyberte si odpoveď</option>
+                <option value="heslo">Zabudnuté heslo</option>
+                <option value="prihlasenie">Neviem sa prihlásiť</option>
+                <option value="stav">Stav objednávky</option>
+                <option value="objednavka">Nová objednávka</option>
+            </select>
+
+            <p>
+                <input id="accept" name="accept" type="checkbox" required >
+                <label for="accept">Súhlasím s podmienkami</label>
+            </p>
+
+            <button type="submit" style="box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 10px; margin-left: 2vh">
+                Odošli
+            </button>
+
+            <button type="reset" style="box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 10px">
+                Vymaž
+            </button>
+        </form>
+    </section>
+
+    <section class="komentare">
+        <h2>Komentáre</h2>
+        <div id="opinionsContainer"></div>
+    </section>
+    <button onclick="delfromForm()">Clear</button>
+</main>
+
+<script crossorigin="anonymous"
+        integrity="sha256-MPgtcamIpCPKRRm1ppJHkvtNBAuE71xcOM+MmQytXi8="
+        src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js">
+</script>
+
+<script id="opinionHtml" type="text/template">
+    <section>
+        <p><b>{{fName}}</b> <i>{{createdDate}}</i></p>
+        <p>{{mInfo}}</p>
+    </section>
+</script>
+
+<script src="js/formscript.js"></script>
+
+<script>
+    function responisity() {
+        if (document.getElementById("responsiveNav").className === "navbar") {
+            document.getElementById("responsiveNav").className += " responsive";
+        } else {
+            document.getElementById("responsiveNav").className = "navbar";
+        }
+    }
+</script>
+
+</body>
+</html>

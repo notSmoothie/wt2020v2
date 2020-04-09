@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>SMODSGN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" media="screen">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/printStyles.css" media="print">
+
+</head>
+
+<body id="article" style="background-color:darkgray">
+<main>
+    <header>
+        <div id="full" class="imagewrapper">
+            <img class="img" alt="Environmental poster" src="pictures/Enviro1.png"/>
+            <img class="img" alt="Environmental poster 2" src="pictures/Enviro2.png"/>
+            <img class="img" alt="Environmental poster 3" src="pictures/Enviro2-2.png"/>
+            <img class="img" alt="Environmental poster 4" src="pictures/Enviro3.png"/>
+        </div>
+
+        <div id="cut" class="imagewrapper">
+            <img class="img" style="min-width: 20vw" alt="Environmental poster" src="pictures/Enviroicon.png"/>
+        </div>
+    </header>
+
+    <nav class="navbar" id="responsiveNav">
+        <a href="index.html" title="DOMOV">Home</a>
+        <a id="onpage" href="Article1.html" title="V roku 2015 mi bola zaslaná...">Enviro Projekt</a>
+        <a href="Atricle1Strapped.html" title="Môj blog">
+            <span class="full">Môj Blog</span>
+            <span class="cut">Blog</span>
+        </a>
+        <a href="Article3.html" title="V tomto článku nájdete zopár ostatných dizajnov...">
+            <span class="full">Ostatná Tvorba</span>
+            <span class="cut">Iné</span></a>
+        <a href="javascript:void(0);" class="icon" onclick="responisity()"><i class="fa fa-bars"></i> </a>
+    </nav>
+
+    <article class="center">
+        <h1>Enviro Project</h1>
+        <p>V roku 2015 mi bola zaslaná zákazka na výrobu šiestich plagátov s témou ekológie. Texty...
+            ako v každej správnej zákazke boli dodané a mojou úlohou bolo vypracovať k nim vhodné obrázky a tematicky
+            vhodný štýl.</p>
+        <p> Po zopár nepodarených konceptoch som sa rozhodol pre veľmi jednoduchý (<i>minimalistický</i>) štýl.
+            Hlavná farba každého obrázka bola zvolená veľmi precízne z vzorkovníka "starších" farieb vhodných pre enviro
+            účely. Samozrejme nemohla chýbať zelená. Obrázky podčiarkovali tematiku a boli najkreatívnejšou časťou
+            tvorby
+            týchto plagátov. Vidíme na nich napríklad ako si môžeme "pomocou fľaše" nabiť telefón, čo je v podstate
+            príklad
+            šetrenia energie recykláciou.
+        </p>
+
+        <h3 style="text-align: center">Zoznam plagátov</h3>
+        <ul>
+            <li>Recyklácia papiera</li>
+            <li>Recyklácia fľiaš</li>
+            <li>Dĺžka rozkladu fľaše</li>
+            <li>Vyhadzovanie dreva</li>
+            <li>Rúbanie pralesov</li>
+        </ul>
+        <p>Samozrejme aby sme lepšie pochopili svoj workflow pre možné budúce zlepšovanie. Alebo sme platení za počet
+            hodín.
+            Potrebujeme mať časové údaje o svojej robote. Môžete použiť obyčajné stopky, ktoré sú súčasťou Windowsu
+            alebo
+            zložitejšie programy, ktoré Vám pauzu počítajú keď dlhšiu dobu nić nerobíte alebo nemáte otvorené programy,
+            cez
+            ktoré pracujete.
+        </p>
+        <p>
+            <strong>
+                Tabuľka s počtom minút a úprav pre jednotlivé plagáty:
+            </strong>
+        </p>
+
+        <table style="margin: auto; text-align: center">
+            <tr>
+                <th>Názov plagátu</th>
+                <th>Počet minút práce</th>
+                <th>Počet úprav</th>
+            </tr>
+            <tr>
+                <td>Recyklácia papiera</td>
+                <td>146 minút</td>
+                <th>8</th>
+            </tr>
+            <tr>
+                <td>Recyklácia fľiaš</td>
+                <td>75 minút</td>
+                <th>2</th>
+            </tr>
+            <tr>
+                <td>Dĺžka rozkladu fľaše</td>
+                <td>41 minút</td>
+                <th>1</th>
+            </tr>
+            <tr>
+                <td>Vyhadzovanie dreva</td>
+                <td>50 minút</td>
+                <th>2</th>
+            </tr>
+            <tr>
+                <td>Rúbanie pralesov</td>
+                <td>74 minút</td>
+                <th>4</th>
+            </tr>
+        </table>
+
+        <picture class="dyn" style="text-align: center; margin-top: 2vw">
+            <source style="text-align: center" srcset="pictures/responsive/Enviro6@0,1x.png" media="(max-width: 621px)">
+            <source style="text-align: center" srcset="pictures/responsive/Enviro6@0,15x.png"
+                    media="(max-width: 1000px)">
+            <source style="text-align: center" srcset="pictures/responsive/Enviro6@0,2x.png"
+                    media="(max-width: 1400px)">
+            <source style="text-align: center" srcset="pictures/responsive/Enviro6@0,25x.png"
+                    media="(max-width: 1538px)">
+            <source style="text-align: center" srcset="pictures/Enviro6.png" media="(min-width: 4961px)">
+            <img alt="Environmental responsive poster" style="text-align: center;max-width: 60vw "
+                 src="pictures/responsive/Enviro6@0,3x.png">
+        </picture>
+        <footer class="bottom"> Vytvorené dňa 4.3.2020 používateľom
+            <a class="MAIL" href="mailto:martin.ondruska.jr@gmail.com?subject=Reakcia%20na%20článok%20Enviro%20Projekt"
+               title="Napíšte nam EMAIL">Martin Ondruška</a></footer>
+    </article>
+</main>
+<script>
+    function responisity() {
+        if (document.getElementById("responsiveNav").className === "navbar") {
+            document.getElementById("responsiveNav").className += " responsive";
+        } else {
+            document.getElementById("responsiveNav").className = "navbar";
+        }
+    }
+</script>
+
+</body>
+</html>

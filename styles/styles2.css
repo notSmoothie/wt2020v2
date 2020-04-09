@@ -1,0 +1,21 @@
+@keyframes dash {
+    from {
+        stroke-dashoffset: 600;
+    }
+    to {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 600;
+    }
+}
+
+svg{
+    width:3000px;
+    height:3000px;
+}
+.path {
+    stroke-dashoffset: 600;
+    stroke-dasharray: 600;
+    animation: dash 4s 0s forwards;
+    stroke-width:7px;
+}
+
