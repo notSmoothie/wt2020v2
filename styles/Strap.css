@@ -1,7 +1,7 @@
 .masthead {
     height: 100vh;
     min-height: 500px;
-    background-image: url("/../pictures/smoothie.png");
+    background-image: url("../pictures/smoothie.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -20,7 +20,7 @@
     font-weight: normal;
 }
 .blog-post{
-    margin-bottom: 10vh;
+    margin-bottom: 4vh;
     padding: 2vh;
     padding-bottom: 1px;
     background-color: white;

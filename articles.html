@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="Martin Thomas Ondruška"/>
+
+    <title>Blog-folio</title>
+
+    <link href="styles/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/Strap.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light shadow fixed-top" style="background-color: lightgray">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="pictures/SMOICON.png" class="img-fluid" style="max-width: 7vh" alt="responsive image">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active" id="homes">
+                    <a class="nav-link" href="#welcome" onclick="switch2()">Home
+                    </a>
+                </li>
+                <li class="nav-item" id="arts">
+                    <a class="nav-link" href="#articles/1/10" id="articlesLink" onclick="change()">Articles
+                    </a>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Back</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script type="text/javascript">
+    function change() {
+        document.getElementById('arts').className = "nav-item active";
+        document.getElementById('homes').className = "nav-item";
+    }
+
+    function switch2() {
+        document.getElementById('homes').className = "nav-item active";
+        document.getElementById('arts').className = "nav-item";
+    }
+</script>
+
+
+<script id="template-welcome" type="text/template">
+    <div class="blog-post" id="post_intro">
+    <article class="default_theme">
+        <h2>Prečo stránka vznikla?</h2>
+        <p>
+            Moja stránka má za cieľ informovať toho, kto ju číta o mojom pôsobení v oblasti počítačovej
+            grafiky
+            nielen formou galérie ale aj formou mojich zážitkov s designom. Poviem vám kúsok o tom kde
+            čerpám informáciu, o zaujímavých klientoch (ktorí sa za pár rokov vždy nazbierajú v
+            akomkoľvek poli pôsobiska) a o tom ako zlepšiť svoju organizáciu času a profesionálnych
+            záležitostí
+            aby ste zbytočne neprichádzali o peniaze a o Vašu vášeň pre tvorbu umenia v akejkoľvek podobe.
+        </p>
+    </article>
+   </div>
+</script>
+
+<script id="template-articles-error" type="text/template">
+    <article>
+        <h2>Articles acquisition failed</h2>
+        <p>
+            {{errMessage}}
+        </p>
+    </article>
+</script>
+
+
+
+<script id="template-articles" type="text/template">
+    {{#.}}
+    <div class="blog-post">
+        <h2 class="blog-post-title"><a href="{{detailLink}}">{{title}}</a></h2>
+        <div>
+            {{content}}
+        </div>
+        <p class="blog-post-meta"> by {{author}}</a></p>
+    </div>
+    {{/.}}
+</script>
+
+<script id="template-paging" type="text/template">
+    <nav style="text-align: center">
+            {{#prevPage}}
+            <a class="btn btn-light" href="#articles/{{prevPage}}/{{pageCount}}"><< Previous page</a>
+            {{/prevPage}}
+            {{#nextPage}}
+            <a class="btn btn-light" href="#articles/{{nextPage}}/{{pageCount}}">Next page >></a>
+            {{/nextPage}}
+    </nav>
+</script>
+
+
+<header class="masthead">
+    <div class="container-fluid h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12 text-center">
+                <h1 class="font-weight-light text-white">
+                    SMO DSGN
+                </h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<footer id="error">
+
+</footer>
+
+<script id="template-opinions" type="text/template">
+    <article class="default_theme" id="artOpinions">
+        <h2>Referencie</h2>
+        {{#.}}
+        <section>
+            <p><b>{{name}}</b> <i>{{created}}</i></p>
+            <p>{{dotaz}}</p>
+        </section>
+        {{/.}}
+        {{^.}}
+        <section>
+            <p>Sorry, no opinions found.</p>
+        </section>
+        {{/.}}
+    </article>
+    <footer class="upButton">
+        <p class="default_theme"><a href="#menuTitle">Up</a></p>
+    </footer>
+</script>
+
+<script id="template-addOpinion" type="text/template">
+    <figure class="default_theme">
+        <h2>Formulár:</h2>
+        <form id="opinion_form" onsubmit="return processOpnFrmData(event)">
+            <p>
+                <label for="name">Meno:</label>
+                <input id="name" name="name" required size="10" type="text">
+            </p>
+
+            <p>
+                <label for="email">E-Mail:</label>
+                <input id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required size="30" type="email">
+            </p>
+
+            <p>
+                <label for="url">Príloha (voliteľné):</label>
+                <input id="url" name="url" pattern="https://.*" size="30" type="url">
+            </p>
+
+            <p>Typ dotazu:</p>
+
+            <div>
+                <input checked id="chyba" name="rb" type="radio"
+                       value="chyba">
+                <label for="chyba">Chyba na webe</label>
+            </div>
+
+            <div>
+                <input id="tip" name="rb" type="radio" value="tip">
+                <label for="tip">Tip na web</label>
+            </div>
+
+            <p>
+                <input id="newsletter" name="newsletter" type="checkbox">
+                <label for="newsletter">Chcem dostávať newsletter</label>
+            </p>
+
+            <p><label for="info">Dotaz:</label></p>
+            <p><textarea id="info" name="info" required></textarea></p>
+
+            <button type="submit">
+                Odošli
+            </button>
+
+            <button type="reset">
+                Vymaž
+            </button>
+        </form>
+    </figure>
+    <footer class="upButton">
+        <p class="default_theme"><a href="#menuTitle">Up</a></p>
+    </footer>
+</script>
+
+<script id="template-article" type="text/template">
+    <article class="default_theme">
+        <div class="blog-post">
+            <h2 class="blog-post-title"><a href="{{detailLink}}">{{title}}</a></h2>
+            {{#imageLink}}
+            <figure>
+                <img src="{{imageLink}}" alt="article figure"/>
+            </figure>
+            {{/imageLink}}
+            <div>
+                {{content}}
+            </div>
+            <p>
+            Keywords:
+            {{tags}}
+            </p>
+            <p class="blog-post-meta"> by {{author}}</a></p>
+        </div>
+    </article>
+
+    <footer class="articleNavFooter" style="text-align:center">
+        <a href="{{backLink}}" class="btn btn-dark"><< Back</a>
+        <a href="{{editLink}}" class="btn btn-dark">Edit</a>
+        <a href="{{deleteLink}}" class="btn btn-dark">Delete</a>
+    </footer>
+</script>
+
+<script id="template-article-form" type="text/template">
+    <article class="default_theme">
+
+        <h2>{{formTitle}}</h2>
+        <br><br>
+
+        <form id="articleForm" onsubmit="return {{formSubmitCall}}">
+            <label for="author">Author:</label>
+            <input type="text" name="author" id="author" value="{{author}}" size="50"
+                   title="Article author, max. length 100 characters." maxlength="100" placeholder="e.g. Ján Trieska"/>
+            <br>
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" value="{{title}}" size="50" maxlength="100" pattern="\S[\S\s]*"
+                   required
+                   title="Article title, mandatory item, max. length: 100 characters, the first character must not be a space."
+                   placeholder="e.g. My story."/>
+            <br>
+            <label for="imageLink">Image (url):</label>
+            <input type="url" name="imageLink" id="imageLink" value="{{imageLink}}" size="50"
+                   title="Image URL, max. length 100 characters." maxlength="100"/>
+            <br>
+            <label></label>
+            <button type="button" id="btShowFileUpload" onclick="showFileUpload()">Upload image</button>
+
+            <fieldset class="added hiddenElm" id="fsetFileUpload">
+                <legend>Image Upload</legend>
+                <input type="file" id="flElm" name="file" accept="image/jpeg, image/png"/>
+                <br/>
+                <button type="button" id="btFileUpload" onclick="uploadImg('{{urlBase}}')">Send image to server</button>
+                <button type="button" id="btCancelFileUpload" onclick="cancelFileUpload()">Cancel uploading</button>
+            </fieldset>
+
+
+            <br>
+            <label for="content">Article content:</label>
+            <textarea
+                    name="content" id="content" spellcheck="true" lang="sk"
+                    cols="50" rows="20" required
+                    title="Article content, mandatory item, can be plain text or in HTML.">{{content}}</textarea>
+            <br>
+            <label for="tags">Keywords:</label>
+            <input type="text" name="tags" id="tags" value="{{tags}}" size="50"
+                   title="Keyword list, comma separated." placeholder="e.g. village, drama"/>
+
+            <br>
+            <br>
+            <button type="reset">
+                Reset Form
+            </button>
+            <button type="submit">
+                {{submitBtTitle}}
+            </button>
+
+        </form>
+
+    </article>
+
+    <footer class="articleNavFooter">
+        <a href="{{backLink}}" class="btn btn-dark"><< Back</a>
+        <a href="#menuTitle" class="btn btn-dark">Up to the menu</a>
+    </footer>
+
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-lg-8">
+            <!-- /.blog-header -->
+            <div id="top"></div>
+            <div class="blog-header text-center">
+                <h1 class="blog-title" >Moje blog-fólio</h1>
+                <p class="lead blog-description">Nejaké informácie o mojich projektoch vo forme blogu.</p>
+            </div>
+            <!-- /.blog-header -->
+
+            <div class="blog-main">
+
+                <main id="router-view"></main>
+
+                <script src="js/addOpinion.js"></script>
+                <script src="js/handleArticleForms.js"></script>
+
+
+                <script type="module" src="js/routerInit.js"></script>
+
+                <script crossorigin="anonymous"
+                        integrity="sha256-MPgtcamIpCPKRRm1ppJHkvtNBAuE71xcOM+MmQytXi8="
+                        src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js">
+                </script>
+
+
+                <!-- /.blog-post -->
+            </div>
+        </div>
+
+
+        <!-- /.sidebar -->
+        <div class="col-sm-4 blog-sidebar " style="padding-top: 5vh; background-color: gray; width: 100%">
+            <div class="sidebar-module sidebar-module-inset">
+                <h4 style="text-align: center; padding-bottom: 2.5vh">O mne</h4>
+                <img id="ME" src="pictures/ME.jpg" alt="Author"
+                     style="display: block; margin-left: auto; margin-right: auto; border-radius: 50%; width: 20vh; padding-bottom: 2.5vh">
+                <ul class="text-center list-unstyled">
+                    <li><b>Martin Thomas Ondruška</b></li>
+                    <li>Technická univerzita v Košiciach</li>
+                    <li><b>FEI</b></li>
+                    <li>Informatika</li>
+                    <li>martin.thomas.ondruska@gmail.com</li>
+                </ul>
+            </div>
+            <div class="sidebar-module text-center">
+                <h4>Articles</h4>
+                <ol class="list-unstyled">
+                    <li><a class="nav-link" href="#post_intro">Vznik</a></li>
+                    <li><a class="nav-link" href="#post_enviro">Enviro projekt</a></li>
+                    <li><a class="nav-link" href="#post_telka">eŠTV Projekt</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.sidebar -->
+
+    </div><!-- /.container -->
+</div>
+<footer class="blog-footer text-center">
+    <p>Martin Thomas Ondruška 8.4.2020</p>
+    <p>
+        <a href="#">Späť na vrch.</a>
+    </p>
+</footer>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+<script src="js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>
+
