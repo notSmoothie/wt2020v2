@@ -1,11 +1,10 @@
-//an array, defining the routes
 export default [
 
     {
         //the part after '#' in the url (so-called fragment):
         hash: "welcome",
         ///id of the target html element:
-        target: "router-view",
+        target: "routerView",
         //the function that returns content to be rendered to the target html element:
         getTemplate: (targetElm) =>
             document.getElementById(targetElm).innerHTML = document.getElementById("template-welcome").innerHTML
@@ -13,44 +12,51 @@ export default [
 
     {
         hash: "articles",
-        target: "router-view",
+        target: "routerView",
         getTemplate: fetchAndDisplayArticles
     },
 
     {
         hash: "opinions",
-        target: "router-view",
+        target: "routerView",
         getTemplate: createHtml4opinions
     },
 
     {
         hash: "addOpinion",
-        target: "router-view",
+        target: "routerView",
         getTemplate: (targetElm) =>
             document.getElementById(targetElm).innerHTML = document.getElementById("template-addOpinion").innerHTML
     },
 
     {
+        hash: "calcPages",
+        target: "routerView",
+        getTemplate: calcTotal
+    },
+
+
+    {
         hash: "article",
-        target: "router-view",
+        target: "routerView",
         getTemplate: fetchAndDisplayArticleDetail
     },
 
     {
-        hash: "artAdd",
-        target: "router-view",
-        getTemplate: artAdd
+        hash: "artInsert",
+        target: "routerView",
+        getTemplate: insertform
     },
 
     {
         hash: "artEdit",
-        target: "router-view",
+        target: "routerView",
         getTemplate: editArticle
     },
 
     {
         hash: "artDelete",
-        target: "router-view",
+        target: "routerView",
         getTemplate: deleteArticle
     }
 
@@ -77,75 +83,97 @@ function createHtml4opinions(targetElm) {
     );
 }
 
-function fetchAndDisplayArticles(targetElm, current, total) {
-    let offset = current;
-    const totalCount = total;
+let currentpage = 1;
+let pageCount = 0;
 
-    current = parseInt(current);
-    total = parseInt(total);
-    const paging = {
-        currPage: current,
-        pageCount: total
-    };
+function calcTotal() {
 
-    if (current > 1) {
-        paging.prevPage = current - 1;
-    }
-
-    if (current < total) {
-        paging.nextPage = current + 1;
-    }
-
-    offset = (current * articlesPerPage) - 20;
-
-    let urlQuery = "";
-
-    urlQuery = `?offset=${offset}&max=${articlesPerPage}`;
-
-    const url = `${urlBase}/article${urlQuery}`;
-
-    document.getElementById("articlesLink").href = `#articles/${current}/10`;
-
-    let listOfArticles = [];
+    const url = `${urlBase}/article?tag=smodesign`;
 
     fetch(url)
         .then(response => {
             if (response.ok) {
                 return response.json();
-            } else { //if we get server error
+            } else {
+                return Promise.reject(new Error(`Server answered with ${response.status}: ${response.statusText}.`));
+            }
+        })
+        .then(responseJSON => {
+            pageCount = (Math.ceil((responseJSON.meta.totalCount)/20));
+            document.getElementById("articlesLink").href = `#articles/1/${pageCount}`;
+        });
+}
+
+function fetchAndDisplayArticles(targetElm, current, total) {
+    let offset = 0;
+
+    current = parseInt(current);
+    total = parseInt(total);
+    const offsetcount = {
+        currPage: current,
+        pageCount: total
+    };
+
+    if (current > 1) {
+        offsetcount.prevPage = current - 1;
+    }
+
+    if (current < total) {
+        offsetcount.nextPage = current + 1;
+    }
+
+    currentpage = current;
+
+    offset = (current * 20) - 20;
+
+    let urlQuery = "";
+
+    urlQuery = `?tag=smodesign&offset=${offset}&max=${articlesPerPage}`;
+
+    const url = `${urlBase}/article${urlQuery}`;
+
+    document.getElementById("articlesLink").href = `#articles/${current}/${pageCount}`;
+
+    let articleList = [];
+
+    fetch(url)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
                 return Promise.reject(new Error(`Server answered with ${response.status}: ${response.statusText}.`));
             }
         })
         .then(responseJSON => {
             addArtDetailLink2ResponseJson(responseJSON);
-            listOfArticles = responseJSON.articles;
+            articleList = responseJSON.articles;
 
             return Promise.resolve();
         })
         .then(() => {
-            let contentMap = listOfArticles.map(
+            let cntMap = articleList.map(
                 article => fetch(`${urlBase}/article/${article.id}`)
             );
 
-            return Promise.all(contentMap);
+            return Promise.all(cntMap);
         })
-        .then(contentMapResponses => {
+        .then(cntResponses => {
             let failed = "";
-            for (let response of contentMapResponses) {
+            for (let response of cntResponses) {
                 if (!response.ok) failed += response.url + " ";
             }
             if (failed === "") {
-                return contentMapResponses;
+                return cntResponses;
             } else {
                 return Promise.reject(new Error(`Failed to access the content of the articles with urls ${failed}.`));
             }
         })
-        .then(contentMapResponses => {
-            return Promise.all(contentMapResponses.map(response => response.json()))
+        .then(cntResponses => {
+            return Promise.all(cntResponses.map(response => response.json()))
         })
         .then(articles => {
             articles.forEach((article, index) => {
-                listOfArticles[index].content = article.content;
+                articleList[index].content = article.content;
             });
 
             return Promise.resolve();
@@ -155,15 +183,14 @@ function fetchAndDisplayArticles(targetElm, current, total) {
             document.getElementById(targetElm).innerHTML =
                 Mustache.render(
                     document.getElementById("template-articles").innerHTML,
-                    listOfArticles
+                    articleList
                 );
             document.getElementById(targetElm).innerHTML +=
                 Mustache.render(
-                    document.getElementById("template-paging").innerHTML,
-                    paging
+                    document.getElementById("template-pager").innerHTML,
+                    offsetcount
                 );
-            window.location.hash = "#top";
-        })
+            })
         .catch(error => {
             const errMsgObj = {errMessage: error};
             document.getElementById(targetElm).innerHTML =
@@ -172,6 +199,7 @@ function fetchAndDisplayArticles(targetElm, current, total) {
                     errMsgObj
                 );
         });
+    window.location.hash = "#top";
 }
 
 function addArtDetailLink2ResponseJson(responseJSON) {
@@ -184,6 +212,104 @@ function addArtDetailLink2ResponseJson(responseJSON) {
                 }
             )
         );
+}
+
+function editArticle(targetElm, artIdFromHash, offsetFromHash, totalCountFromHash) {
+    fetchAndProcessArticle(...arguments,true);
+}
+
+function insertform(targetElm, offsetFromHash, totalCountFromHash) {
+    const log = {
+        formTitle: "Add Article",
+        formSubmitCall:  `addNewArticle(routerView,template-article,'${urlBase}')`,
+        submitBtTitle : "Add article"
+
+    };
+    document.getElementById(targetElm).innerHTML =
+    Mustache.render(
+        document.getElementById("template-article-form").innerHTML,
+        log
+    );
+    document.getElementById("articleForm").addEventListener("submit",event =>{
+            event.preventDefault();
+            addNewArticle("routerView","template-article",urlBase, offsetFromHash, totalCountFromHash);
+        }
+    );
+    calcTotal();
+}
+
+function fetchAndDisplayArticleDetail(targetElm, artIdFromHash, offsetFromHash, totalCountFromHash) {
+    fetchAndProcessArticle(...arguments,false);
+}
+
+
+function fetchAndProcessArticle(targetElm, artIdFromHash, offsetFromHash, totalCountFromHash,forEdit,newArt) {
+    const url = `${urlBase}/article/${artIdFromHash}`;
+
+    fetch(url)
+        .then(response =>{
+            if(response.ok){
+                return response.json();
+            }else{ //if we get server error
+                return Promise.reject(new Error(`Server answered with ${response.status}: ${response.statusText}.`));
+            }
+        })
+        .then(responseJSON => {
+            if(newArt){
+                let defaultView = 'routerView';
+                let artTemplate = 'template-article';
+
+                responseJSON.formTitle="Article Add";
+                responseJSON.formSubmitCall =
+                    `addNewArticle(${defaultView},${artTemplate},'${urlBase}')`;
+                responseJSON.submitBtTitle="Save article";
+                responseJSON.urlBase=urlBase;
+
+                responseJSON.backLink=`#article/${artIdFromHash}/${offsetFromHash}/${totalCountFromHash}`;
+
+                document.getElementById(targetElm).innerHTML =
+                    Mustache.render(
+                        document.getElementById("template-article-form").innerHTML,
+                        responseJSON
+                    );
+
+            }else if(forEdit){
+                responseJSON.formTitle="Article Edit";
+                responseJSON.formSubmitCall =
+                    `processArtEditFrmData(event,${artIdFromHash},${offsetFromHash},${totalCountFromHash},'${urlBase}')`;
+                responseJSON.submitBtTitle="Save article";
+                responseJSON.urlBase=urlBase;
+
+                responseJSON.backLink=`#article/${artIdFromHash}/${offsetFromHash}/${totalCountFromHash}`;
+
+                document.getElementById(targetElm).innerHTML =
+                    Mustache.render(
+                        document.getElementById("template-article-form").innerHTML,
+                        responseJSON
+                    );
+            }else{
+
+                responseJSON.backLink=`#articles/${currentpage}/${pageCount}/${offsetFromHash}/${totalCountFromHash}`;
+                responseJSON.editLink=`#artEdit/${responseJSON.id}/${offsetFromHash}/${totalCountFromHash}`;
+                responseJSON.deleteLink=`#artDelete/${responseJSON.id}/${offsetFromHash}/${totalCountFromHash}`;
+
+                document.getElementById(targetElm).innerHTML =
+                    Mustache.render(
+                        document.getElementById("template-article").innerHTML,
+                        responseJSON
+                    );
+            }
+
+        })
+        .catch (error => { ////here we process all the failed promises
+            const errMsgObj = {errMessage:error};
+            document.getElementById(targetElm).innerHTML =
+                Mustache.render(
+                    document.getElementById("template-articles-error").innerHTML,
+                    errMsgObj
+                );
+        });
+
 }
 
 function deleteArticle(targetElm, id2Delete) {
@@ -209,130 +335,11 @@ function deleteArticle(targetElm, id2Delete) {
             outpElm.innerHTML += `<div class="alert alert-warning" role="alert">Attempt failed. Details: <br />  ${error}</div>`;
         });
 
+
+
 }
 
-function fetchAndDisplayArticleDetail(targetElm, artIdFromHash, offsetFromHash, totalCountFromHash) {
-    fetchAndProcessArticle(...arguments, false);
-}
 
 
-function fetchAndProcessArticle(targetElm, artIdFromHash, offsetFromHash, totalCountFromHash, forEdit) {
-    const url = `${urlBase}/article/${artIdFromHash}`;
-
-    fetch(url)
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else { //if we get server error
-                return Promise.reject(new Error(`Server answered with ${response.status}: ${response.statusText}.`));
-            }
-        })
-        .then(responseJSON => {
-            if (forEdit) {
-                responseJSON.formTitle = "Article Edit";
-                responseJSON.formSubmitCall =
-                    `processArtEditFrmData(event,${artIdFromHash},${offsetFromHash},${totalCountFromHash},'${urlBase}')`;
-                responseJSON.submitBtTitle = "Save article";
-                responseJSON.urlBase = urlBase;
-
-                responseJSON.backLink = `#article/${artIdFromHash}/${offsetFromHash}/${totalCountFromHash}`;
-
-                document.getElementById(targetElm).innerHTML =
-                    Mustache.render(
-                        document.getElementById("template-article-form").innerHTML,
-                        responseJSON
-                    );
-            } else {
-                responseJSON.backLink = `#articles/${offsetFromHash}/${totalCountFromHash}`;
-                responseJSON.editLink = `#artEdit/${responseJSON.id}/${offsetFromHash}/${totalCountFromHash}`;
-                responseJSON.deleteLink = `#artDelete/${responseJSON.id}/${offsetFromHash}/${totalCountFromHash}`;
-
-                document.getElementById(targetElm).innerHTML =
-                    Mustache.render(
-                        document.getElementById("template-article").innerHTML,
-                        responseJSON
-                    );
-            }
-        })
-        .catch(error => { ////here we process all the failed promises
-            const errMsgObj = {errMessage: error};
-            document.getElementById(targetElm).innerHTML =
-                Mustache.render(
-                    document.getElementById("template-articles-error").innerHTML,
-                    errMsgObj
-                );
-        });
-}
-
-function editArticle(targetElm, artIdFromHash, offsetFromHash, totalCountFromHash) {
-    fetchAndProcessArticle(...arguments, true);
-}
-
-function artAdd(outputElement, urlBase) {
-    addNewArticle(...arguments);
-}
-
-function addNewArticle(outputElement, serverUrl) {
-
-    const articleElm = document.getElementById(targetElm);
-
-    //1. Gather and check the form data
-
-    const newArtData = {
-        title: document.getElementById("title").value.trim(),
-        content: document.getElementById("content").value.trim(),
-        author: document.getElementById("author").value.trim()
-    };
-
-    if (!(newArtData.title && newArtData.content)) {
-        window.alert("Please, enter article title and content");
-        return;
-    }
-
-    if (!newArtData.author) {
-        newArtData.author = "Anonymous";
-    }
-
-
-    //2. Set up the request
-
-
-    const postReqSettings = //an object wih settings of the request
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-            },
-            body: JSON.stringify(newArtData)
-        };
-
-
-    //3. Execute the request
-
-
-    fetch(`${serverUrl}/article`, postReqSettings)  //now we need the second parameter, an object wih settings of the request.
-        .then(response => {      //fetch promise fullfilled (operation completed successfully)
-            if (response.ok) {    //successful execution includes an error response from the server. So we have to check the return status of the response here.
-                return response.json(); //we return a new promise with the response data in JSON to be processed
-            } else { //if we get server error
-                return Promise.reject(new Error(`Server answered with ${response.status}: ${response.statusText}.`)); //we return a rejected promise to be catched later
-            }
-        })
-        .then(responseJSON => { //here we process the returned response data in JSON ...
-            articleElm.innerHTML =
-                `
-                    <h2>Article successfully posted with id=${responseJSON.id}</h2>
-                    <h3>${responseJSON.title}</h3><div>${responseJSON.content}
-                `;
-            console.log(responseJSON);
-        })
-        .catch(error => { ////here we process all the failed promises
-            articleElm.innerHTML =
-                `
-                    <h2>Error reading data from the server</h2>
-                    ${error}
-                `;
-        });
-}
 
 

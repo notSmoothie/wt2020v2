@@ -1,6 +1,12 @@
 function processOpnFrmData(event) {
     event.preventDefault();
 
+    let opinions = [];
+
+    if (localStorage.myOpinions) {
+        opinions = JSON.parse(localStorage.myOpinions);
+    }
+
     const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
     const url = document.getElementById("url").value.trim();
@@ -29,13 +35,9 @@ function processOpnFrmData(event) {
 
     localStorage.myOpinions = JSON.stringify(opinions);
 
+    window.location.hash = "#opinions";
+
+
     window.alert("Ďakujeme za Váš názor.");
-    console.log("New opinion added");
-    console.log(opinions);
 
-    opinionsElm.innerHTML += op2ht(newOpinion);
-
-
-
-    element.reset();
 }

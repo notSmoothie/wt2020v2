@@ -23,21 +23,33 @@
         <a class="navbar-brand" href="#">
             <img src="pictures/SMOICON.png" class="img-fluid" style="max-width: 7vh" alt="responsive image">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        <button id="gui" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active" id="homes">
-                    <a class="nav-link" href="#welcome" onclick="switch2()">Home
+                <li class="nav-item active" id="home">
+                    <a class="nav-link" href="#welcome" onclick="opn('home')">Home
                     </a>
                 </li>
                 <li class="nav-item" id="arts">
-                    <a class="nav-link" href="#articles/1/10" id="articlesLink" onclick="change()">Articles
+                    <a class="nav-link" href="#articles/1/${pageCount}" id="articlesLink" onclick="opn('arts')">Articles
                     </a>
+                </li>
+                <li class="nav-item" id="addItem">
+                    <a class="nav-link" href="#opinions" id="opnsLink" onclick="opn('addItem')">Opinions
+                    </a>
+                </li>
+                <li class="nav-item" id="addComm">
+                    <a class="nav-link" href="#addOpinion" id="addOpnLink" onclick="opn('addComm')">Add Opinion
+                    </a>
+                </li>
+                <li class="nav-item" id="addArt">
+                    <a href="#artInsert" class="nav-link" onclick="opn('addArt')">New Article</a>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="index.html">Back</a>
+                    <a class="nav-link" href="index.html" >Back</a>
                 </li>
             </ul>
         </div>
@@ -45,14 +57,15 @@
 </nav>
 
 <script type="text/javascript">
-    function change() {
-        document.getElementById('arts').className = "nav-item active";
-        document.getElementById('homes').className = "nav-item";
-    }
-
-    function switch2() {
-        document.getElementById('homes').className = "nav-item active";
+    function opn(call) {
+        const caller=call.toString();
+        document.getElementById('home').className = "nav-item";
         document.getElementById('arts').className = "nav-item";
+        document.getElementById('addItem').className = "nav-item";
+        document.getElementById('addComm').className = "nav-item";
+        document.getElementById('addArt').className = "nav-item";
+        document.getElementById(caller).className = "nav-item active";
+        document.getElementById("gui").click();
     }
 </script>
 
@@ -92,12 +105,13 @@
         <div>
             {{content}}
         </div>
-        <p class="blog-post-meta"> by {{author}}</a></p>
+        <br>
+        <p class="blog-post-meta"><b>by</b> {{author}}</a></p>
     </div>
     {{/.}}
 </script>
 
-<script id="template-paging" type="text/template">
+<script id="template-pager" type="text/template">
     <nav style="text-align: center">
             {{#prevPage}}
             <a class="btn btn-light" href="#articles/{{prevPage}}/{{pageCount}}"><< Previous page</a>
@@ -127,11 +141,11 @@
 
 <script id="template-opinions" type="text/template">
     <article class="default_theme" id="artOpinions">
-        <h2>Referencie</h2>
+        <h2>Komentár</h2>
         {{#.}}
         <section>
             <p><b>{{name}}</b> <i>{{created}}</i></p>
-            <p>{{dotaz}}</p>
+            <p>{{info}}</p>
         </section>
         {{/.}}
         {{^.}}
@@ -140,63 +154,77 @@
         </section>
         {{/.}}
     </article>
-    <footer class="upButton">
-        <p class="default_theme"><a href="#menuTitle">Up</a></p>
-    </footer>
 </script>
 
 <script id="template-addOpinion" type="text/template">
-    <figure class="default_theme">
-        <h2>Formulár:</h2>
-        <form id="opinion_form" onsubmit="return processOpnFrmData(event)">
-            <p>
-                <label for="name">Meno:</label>
-                <input id="name" name="name" required size="10" type="text">
-            </p>
-
-            <p>
-                <label for="email">E-Mail:</label>
-                <input id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required size="30" type="email">
-            </p>
-
-            <p>
-                <label for="url">Príloha (voliteľné):</label>
-                <input id="url" name="url" pattern="https://.*" size="30" type="url">
-            </p>
-
-            <p>Typ dotazu:</p>
-
-            <div>
-                <input checked id="chyba" name="rb" type="radio"
-                       value="chyba">
-                <label for="chyba">Chyba na webe</label>
+    <section id="form">
+    <form  onsubmit="return processOpnFrmData(event)" >
+        <div id="formicka">
+            <div class="form-group">
+                <h2>Formulár:</h2>
+                <label for="name">Meno</label>
+                <br>
+                <input class="form-control" id="name" name="name" required size="10" type="text">
             </div>
 
-            <div>
-                <input id="tip" name="rb" type="radio" value="tip">
-                <label for="tip">Tip na web</label>
+            <div class="form-group">
+                <label for="email">E-Mail</label>
+                <br>
+                <input type="email" name="email"  class="form-control" id="email" required size="30">
             </div>
 
-            <p>
-                <input id="newsletter" name="newsletter" type="checkbox">
-                <label for="newsletter">Chcem dostávať newsletter</label>
-            </p>
+            <div class="form-group">
+                <label for="url">Obrázok</label>
+                <br>
+                <input class="form-control" id="url" name="url" pattern="https://.*" size="30" type="url">
+            </div>
 
-            <p><label for="info">Dotaz:</label></p>
-            <p><textarea id="info" name="info" required></textarea></p>
+            <div class="form-group">
+                <p>Typ správy</p>
 
-            <button type="submit">
-                Odošli
-            </button>
+                <div class="form-check">
+                    <input checked id="zlepsenie" name="radio" type="radio" value="zlepsenie" class="form-check-input">
+                    <label class="form-check-label" for="zlepsenie">Zlepšenie webu</label>
+                </div>
 
-            <button type="reset">
-                Vymaž
-            </button>
+                <div class="form-check">
+                    <input class="form-check-input" id="nazor" name="radio" type="radio" value="nazor">
+                    <label class="form-check-label" for="nazor">Názor na článok</label>
+                </div>
+            </div>
+
+                <div class="form-group">
+                    <label for="info">Správa</label></p>
+                    <p>
+                        <textarea class="form-control" class="forminput" id="info" name="info" style="resize: none; height: 8vh" required></textarea>
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="supp" id="support">Support</label>
+                <select class="form-control" id="supp">
+                    <option value="">Prosím vyberte si odpoveď</option>
+                    <option value="heslo">Zabudnuté heslo</option>
+                    <option value="prihlasenie">Neviem sa prihlásiť</option>
+                    <option value="stav">Stav objednávky</option>
+                    <option value="objednavka">Nová objednávka</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <div id="check">
+                    <input id="accept" name="accept" type="checkbox" required >
+                    <label for="accept">Súhlasím s podmienkami</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+             <button type="reset" class="btn btn-primary">Reset</button>
+
         </form>
-    </figure>
-    <footer class="upButton">
-        <p class="default_theme"><a href="#menuTitle">Up</a></p>
-    </footer>
+    </section>
 </script>
 
 <script id="template-article" type="text/template">
@@ -205,7 +233,7 @@
             <h2 class="blog-post-title"><a href="{{detailLink}}">{{title}}</a></h2>
             {{#imageLink}}
             <figure>
-                <img src="{{imageLink}}" alt="article figure"/>
+                <img style="width: 90%" src="{{imageLink}}" alt="article figure"/>
             </figure>
             {{/imageLink}}
             <div>
@@ -215,7 +243,7 @@
             Keywords:
             {{tags}}
             </p>
-            <p class="blog-post-meta"> by {{author}}</a></p>
+            <p class="blog-post-meta"><b>by</b> {{author}}</a></p>
         </div>
     </article>
 
@@ -227,12 +255,11 @@
 </script>
 
 <script id="template-article-form" type="text/template">
-    <article class="default_theme">
 
         <h2>{{formTitle}}</h2>
         <br><br>
 
-        <form id="articleForm" onsubmit="return {{formSubmitCall}}">
+            <form id="articleForm" onsubmit="return {{formSubmitCall}}">
             <label for="author">Author:</label>
             <input type="text" name="author" id="author" value="{{author}}" size="50"
                    title="Article author, max. length 100 characters." maxlength="100" placeholder="e.g. Ján Trieska"/>
@@ -278,16 +305,7 @@
             <button type="submit">
                 {{submitBtTitle}}
             </button>
-
         </form>
-
-    </article>
-
-    <footer class="articleNavFooter">
-        <a href="{{backLink}}" class="btn btn-dark"><< Back</a>
-        <a href="#menuTitle" class="btn btn-dark">Up to the menu</a>
-    </footer>
-
 </script>
 
 <div class="container">
@@ -303,11 +321,10 @@
 
             <div class="blog-main">
 
-                <main id="router-view"></main>
+                <main id="routerView"></main>
 
                 <script src="js/addOpinion.js"></script>
                 <script src="js/handleArticleForms.js"></script>
-
 
                 <script type="module" src="js/routerInit.js"></script>
 
@@ -323,7 +340,7 @@
 
 
         <!-- /.sidebar -->
-        <div class="col-sm-4 blog-sidebar " style="padding-top: 5vh; background-color: gray; width: 100%">
+        <div class="inv col-sm-4 blog-sidebar" style="margin-left:auto; margin-right: auto; padding-top: 5vh; background-color: gray; width: 95%; min-height: 84vh">
             <div class="sidebar-module sidebar-module-inset">
                 <h4 style="text-align: center; padding-bottom: 2.5vh">O mne</h4>
                 <img id="ME" src="pictures/ME.jpg" alt="Author"
@@ -337,12 +354,8 @@
                 </ul>
             </div>
             <div class="sidebar-module text-center">
-                <h4>Articles</h4>
-                <ol class="list-unstyled">
-                    <li><a class="nav-link" href="#post_intro">Vznik</a></li>
-                    <li><a class="nav-link" href="#post_enviro">Enviro projekt</a></li>
-                    <li><a class="nav-link" href="#post_telka">eŠTV Projekt</a></li>
-                </ol>
+                <br>
+                <br>
             </div>
         </div>
         <!-- /.sidebar -->
@@ -364,7 +377,6 @@
 <script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
 <script src="js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<script src="js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>
 
